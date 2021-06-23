@@ -6,6 +6,7 @@ var ctx;
 var zpressed = false;
 var xpressed = false;
 var cpressed = false;
+var startflg=1;
 
 window.onload=function(){
     canvas=document.getElementById("canvas");
@@ -25,34 +26,31 @@ window.onload=function(){
 };
 
 function loop(){
-    if (zpressed==true){
-        
-    }
+
 }
 
 /////////*main*///////////////////////////////////////////////////////
 
-////key down//////////////////////////////////////
-document.addEventListener("keydown", function (e){
-    if(e.key=="z"){
-        zperssed=true;
-    } else if(e.key == "x"){
-        xpressed=true;
-    } else if(e.key =="c"){
-        cpressed=true;
+////click /////////////////////////////////////////
+document.getElementById("canvas").addEventListener("click", (e)=>{
+    const rect = canvas.getBoundingClientRect();
+    const point = {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    }; 
+    const square = { //square of start button
+        x: 0, y: 0,  
+        w: cwidth, h: cheight  
+    };
+    const start =
+            (square.x <= point.x && point.x <= square.x + square.w)  // horizontal
+         && (square.y <= point.y && point.y <= square.y + square.h)  // vertical
+         && (startflg) //startflg
+      
+    if (start) {
+        alert('start!'); 
+        startflg=0;
     }
-    zpressed=true;
-}, false);
-
-////key up/////////////////////////////////////////
-document.addEventListener("keyup", function(e){
-    if(e.key=="z"){
-        zperssed=false;
-    } else if(e.key == "x"){
-        xpressed=false;
-    } else if(e.key =="c"){
-        cpressed=false;
-    }
-}, false);
+});
 
 setInterval(loop,10);
