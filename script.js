@@ -31,6 +31,8 @@ function loop(){
             ctx.fillText("CCLEMON",440,250);
             ctx.font="20px serif";
             ctx.fillText("click or tap to start", 440,400);
+            ctx.font="20px serif";
+            ctx.fillText("rating: " + rating, 740,40);
             ctx.fill();    
         };
         background.src = "./background_town.jpg";
@@ -51,26 +53,31 @@ function loop(){
             if (timewait <= 0) { 
                 ////////////////////////////////win or lose
                 if (myaction == 0 && enemyaction == 1){
-                    window.alert("YOU LOSE");
+                    rating-=50;
+                    window.alert("YOU LOSE rating=" + rating);
                     startflg=1;
                 } else if (myaction == 1 && enemyaction == 0){
-                    window.alert("YOU WIN");
+                    rating+=50;
+                    window.alert("YOU WIN rating=" + rating);
                     startflg=1;
                 }
+                localStorage.setItem("rating", rating);
                 ////////////////////////////////inclement or declement of lemon
                 if (myaction == 0) myattack++;
                 if (enemyaction == 0) enemyattack++;
                 if (myaction == 1) myattack--;
                 if (enemyaction == 1) enemyattack--;
                 if (myaction == 1 && myattack == 0) myaction = 2;
+
                 gauge=0;
                 mode=0;
+
                 enemyaction =Math.floor(Math.random()*3);
                 if (enemyaction == 1 && enemyattack == 0){
                     if (Math.floor(Math.random())*2 < 1){
-                        enemyattack = 2;
+                        enemyaction = 2;
                     } else{
-                        enemyattack = 0;
+                        enemyaction = 0;
                     }
                 }
             }
