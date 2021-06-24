@@ -17,9 +17,18 @@ var mytop=350,enemytop=190;
 var gauge = 0,waittime=0; 
 var lemonl=170,attackl =370,barrierl=570;
 var rating = Number(localStorage.getItem("rating"));
+var modechange=1;
+
+var bgm = document.getElementById("mainBGM");
+var se_click = document.getElementById("se_click");
+se_click.volume=1.0;
 
 function loop(){
     if (startflg ==1){ //start window//////////////////////////
+        if (bgm.paused==true) {
+            bgm.src="titleBGM.mp3";
+            bgm.play();
+        }
         canvas=document.getElementById("canvas");
         ctx=canvas.getContext("2d");    
         var background = new Image();
@@ -55,10 +64,14 @@ function loop(){
                 if (myaction == 0 && enemyaction == 1){
                     rating-=50;
                     window.alert("YOU LOSE rating=" + rating);
+                    bgm.src = "titleBGM.mp3";
+                    bgm.play();        
                     startflg=1;
                 } else if (myaction == 1 && enemyaction == 0){
                     rating+=50;
                     window.alert("YOU WIN rating=" + rating);
+                    bgm.src = "titleBGM.mp3";
+                    bgm.play();        
                     startflg=1;
                 }
                 localStorage.setItem("rating", rating);
@@ -171,34 +184,48 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
         startflg=0;
         myattack=1;
         enemyattack=1;
+        bgm.src = "mainBGM.mp3";
+        bgm.play();
+        se_click.play(0);
     }
+    
     if (mode == 0){
         square = { //square of lemmon
             x: lemonl, y: mytop-30,  
             w: 200, h: 50  
         };
         if((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
-            && (square.y <= point.y && point.y <= square.y + square.h))  // vertical
-            myaction=0 //lemon
-
+            && (square.y <= point.y && point.y <= square.y + square.h)){
+                myaction=0;
+                se_click.currentTime=0;
+                se_click.play(); //lemon
+            }  // vertical
         square = { //square of attack
             x: attackl, y: mytop-30,  
             w: 200, h: 50  
         };
         if((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
-            && (square.y <= point.y && point.y <= square.y + square.h))  // vertical
-            if (myattack != 0) myaction=1 //lemon
-
+            && (square.y <= point.y && point.y <= square.y + square.h)  // vertical
+            && (myattack != 0)){
+            myaction=1;
+            se_click.currentTime=0;
+            se_click.play(); //attack
+        }
         square = { //square of barrier
             x: barrierl, y: mytop-30,  
             w: 200, h: 50  
         };
         if((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
-            && (square.y <= point.y && point.y <= square.y + square.h))  // vertical
-            myaction=2 //lemon
+            && (square.y <= point.y && point.y <= square.y + square.h)){
+                myaction=2;
+                se_click.currentTime=0;
+                se_click.play(); //barrier
+            }  // vertical
     }
 });
 
-////initialize rating
-if (rating == null) rating = 1500;
+////initialize
+bgm.src = "titleBGM.mp3";
+bgm.volume=0.2;
+bgm.play();
 setInterval(loop,20);
