@@ -17,11 +17,27 @@ var mytop=350,enemytop=190;
 var gauge = 0,waittime=0; 
 var lemonl=170,attackl =370,barrierl=570;
 var rating = Number(localStorage.getItem("rating"));
+var drating = 0;
 var modechange=1;
+var message;
+var turn = 0;
 
 var bgm = document.getElementById("mainBGM");
 var se_click = document.getElementById("se_click");
 se_click.volume=1.0;
+
+function decideact(){
+    var enem;
+    enem =Math.floor(Math.random()*3);
+    if (enem == 1 && enemyattack == 0){
+        if (Math.floor(Math.random())*2 < 1){
+            enem = 2;
+        } else{
+            enem = 0;
+        }
+    }
+    return enem;
+}
 
 function loop(){
     if (startflg ==1){ //start window//////////////////////////
@@ -29,6 +45,7 @@ function loop(){
             bgm.src="titleBGM.mp3";
             bgm.play();
         }
+
         canvas=document.getElementById("canvas");
         ctx=canvas.getContext("2d");    
         var background = new Image();
@@ -37,7 +54,7 @@ function loop(){
             ctx.font="33px serif";
             ctx.fillStyle="#FFFFFF";
             ctx.textAlign = "center";
-            ctx.fillText("CCLEMON",440,250);
+            ctx.fillText("CC LEMON",440,250);
             ctx.font="20px serif";
             ctx.fillText("click or tap to start", 440,400);
             ctx.font="20px serif";
@@ -46,7 +63,30 @@ function loop(){
         };
         background.src = "./background_town.jpg";
     }else if (endflg ==1) { //ending window//////////////////////////
-
+        canvas=document.getElementById("canvas");
+        ctx=canvas.getContext("2d");    
+        var background = new Image();
+        background.onload=function(){
+            ctx.drawImage(background,0,0,cwidth,cheight);
+            ctx.font="33px serif";
+            ctx.fillStyle="#FFFFFF";
+            ctx.textAlign = "center";
+            ctx.fillText(message,440,200);
+            ctx.font="20px serif";
+            ctx.fillText("turn: " + turn, 440,300);
+            ctx.font="20px serif";
+            if (drating > 0){
+                ctx.fillText("new rating: " + rating + " (+" + drating + ")", 440,340);
+            } else if(drating < 0){
+                ctx.fillText("new rating: " + rating + " (" + drating + ")", 440,340);
+            } else{
+                ctx.fillText("new rating: " + rating + " (0)", 440,340);
+            }
+            ctx.font="20px serif";
+            ctx.fillText("click or tap to continue", 440,450);
+            ctx.fill();    
+        };
+        background.src = "./background_town.jpg";
     }else { //gaming windows/////////////////////////////////////////
         //////////////////////////////////////////////////////////drawing
         ////////////////////////////////////////////background
@@ -57,22 +97,25 @@ function loop(){
             ctx.drawImage(background,0,0,cwidth,cheight);
 
         if (mode == 1){ //battling
-
             timewait--;
             if (timewait <= 0) { 
                 ////////////////////////////////win or lose
                 if (myaction == 0 && enemyaction == 1){
-                    rating-=50;
-                    window.alert("YOU LOSE rating=" + rating);
+                    rating-=40;
+                    drating=-40;
                     bgm.src = "titleBGM.mp3";
-                    bgm.play();        
-                    startflg=1;
+                    message = "YOU LOSE";
+                    bgm.play();     
+                   // startflg=1;
+                    endflg=1;
                 } else if (myaction == 1 && enemyaction == 0){
-                    rating+=50;
-                    window.alert("YOU WIN rating=" + rating);
+                    rating+=40;
+                    drating=40;
                     bgm.src = "titleBGM.mp3";
-                    bgm.play();        
-                    startflg=1;
+                    message="YOU WIN";
+                    bgm.play();
+                   // startflg=1;
+                    endflg=1;
                 }
                 localStorage.setItem("rating", rating);
                 ////////////////////////////////inclement or declement of lemon
@@ -85,14 +128,8 @@ function loop(){
                 gauge=0;
                 mode=0;
 
-                enemyaction =Math.floor(Math.random()*3);
-                if (enemyaction == 1 && enemyattack == 0){
-                    if (Math.floor(Math.random())*2 < 1){
-                        enemyaction = 2;
-                    } else{
-                        enemyaction = 0;
-                    }
-                }
+                enemyaction = decideact();
+                turn++;
             }
 
             ctx.font="30px serif";///////////////enemy and my actions
@@ -178,13 +215,25 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
     const start =
             (square.x <= point.x && point.x <= square.x + square.w)  // horizontal
          && (square.y <= point.y && point.y <= square.y + square.h)  // vertical
-         && (startflg) //startflg      
+         && (startflg) //startflg    
+    const end =
+         (square.x <= point.x && point.x <= square.x + square.w)  // horizontal
+      && (square.y <= point.y && point.y <= square.y + square.h)  // vertical
+      && (endflg) //startflg    
 
     if (start) {/////////////////////////////////////////////initialize
         startflg=0;
         myattack=1;
         enemyattack=1;
+        turn = 0;
         bgm.src = "mainBGM.mp3";
+        bgm.play();
+        se_click.play(0);
+    }
+    if (end) {/////////////////////////////////////////////end clicked
+        startflg=1;
+        endflg=0;
+        bgm.src = "titleBGM.mp3";
         bgm.play();
         se_click.play(0);
     }
