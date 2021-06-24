@@ -1,0 +1,20 @@
+1 Welcome to CC Lemon　初勝利する✅
+2 Thunder 5回勝利✅
+3 Comet 10回勝利✅
+4 LaserBeam 50回勝利✅
+5 Challenger 5回勝負✅
+6 Veteran 25回勝負✅
+7 Specialist 100回勝負✅
+8 Dont Give up　レーティングが0以下になる✅
+9 Speed Hitman　1ターン目で終了する✅
+10 NECK and NECK 25ターン目以降で終了する✅
+11 You like lemons 5回連続でレモンをする
+12 Fierce Attacker 5回連続でアタックをする
+13 Solid Defender 10回連続でバリアをする
+14 The first step　茶色以上になる✅
+15 Green lemon　緑色以上になる✅
+16 Fly high 水色以上になる✅
+17 Pale Blue　青色以上になる✅
+18 Sour Lemonade　黄色以上になる✅
+19 An orange　オレンジ色以上になる✅
+20 Legendary CCLemonist　赤色以上になる✅
