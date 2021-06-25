@@ -23,6 +23,8 @@ var message;
 var turn = 0;
 var enemyrating = 0;
 var viewachievement = 0;
+var pastrating  = [];
+var pastratingnum;
 var currentlemon;
 var currentbarrier;
 var currentattack;
@@ -49,20 +51,21 @@ var se_click = document.getElementById("se_click");
 se_click.volume=1.0;
 var achievementsound = document.getElementById("achievement");
 
-function coloring(){ ////////////coloring or rating
-    if(rating <= 100){
+function coloring(colrating){ ////////////coloring or rating
+    if (colrating == null) colrating = rating;
+    if(colrating <= 100){
         return "#AAAAAA";
-    } else if(rating < 200){
+    } else if(colrating < 200){
         return "#AA6600";
-    } else if(rating < 300){
+    } else if(colrating < 300){
         return "#00BB00";
-    } else if(rating < 400){
+    } else if(colrating < 400){
         return "#88FFFF";
-    } else if(rating < 500){
+    } else if(colrating < 500){
         return "#6566FF";
-    } else if(rating < 600){
+    } else if(colrating < 600){
         return "#DDDD00";
-    } else if(rating < 700){
+    } else if(colrating < 700){
         return "#FF9900";
     } else{
         return "#FF0000";
@@ -141,42 +144,102 @@ function loop(){
                 ctx.textAlign = "left";
                 ctx.fillStyle="rgba(" + [0,0,0,0.5] + ")";
                 ctx.fillRect(60,60,cwidth - 120,cheight - 80);
-                ctx.fillStyle="#FFFFFF";
-                for (var i = 0; i < 20; i++){
-                    var acleft;
-                    var actop;
-                    if (i < 10){
-                        acleft = 140;
-                        actop = 42 * i + 88;
-                    } else{
-                        acleft = 460;
-                        actop = 42 * (i-10) + 88;
-                    }
-                    if (achievementstatus[i]){
-                        if (achievementclass[i] == 0){
-                            ctx.fillStyle="#953500";
-                        } else if(achievementclass[i] == 1){
-                            ctx.fillStyle="#DDDDDD";
-                        } else if(achievementclass[i] == 2){
-                            ctx.fillStyle="#D1CD00";
-                        } else {
-                            ctx.fillStyle="#BDFFFF";
+                if (viewachievement==1){
+                    ctx.fillStyle="#FFFFFF";
+                    for (var i = 0; i < 20; i++){
+                        var acleft;
+                        var actop;
+                        if (i < 10){
+                            acleft = 140;
+                            actop = 40 * i + 88;
+                        } else{
+                            acleft = 460;
+                            actop = 40 * (i-10) + 88;
                         }
-                        ctx.font="15px serif";
-                        ctx.fillText("●", acleft-30,actop);                                
-                        ctx.fillStyle="#FFFFFF";
-                        ctx.font="15px serif";
-                        ctx.fillText(achievementname[i], acleft,actop);                                
-                        ctx.font="10px serif";
-                        ctx.fillText(achievementexp[i], acleft+30,actop+15);                                
-                    } else {
-                        ctx.fillStyle="#333333";
-                        ctx.font="15px serif";
-                        ctx.fillText("●", acleft-30,actop);                                
-                        ctx.fillStyle="#FFFFFF";
-                        ctx.fillText("?????????", acleft,actop);        
+                        if (achievementstatus[i]){
+                            if (achievementclass[i] == 0){
+                                ctx.fillStyle="#953500";
+                            } else if(achievementclass[i] == 1){
+                                ctx.fillStyle="#DDDDDD";
+                            } else if(achievementclass[i] == 2){
+                                ctx.fillStyle="#D1CD00";
+                            } else {
+                                ctx.fillStyle="#BDFFFF";
+                            }
+                            ctx.font="15px serif";
+                            ctx.fillText("●", acleft-30,actop);                                
+                            ctx.fillStyle="#FFFFFF";
+                            ctx.font="15px serif";
+                            ctx.fillText(achievementname[i], acleft,actop);                                
+                            ctx.font="10px serif";
+                            ctx.fillText(achievementexp[i], acleft+30,actop+15);                                
+                        } else {
+                            ctx.fillStyle="#333333";
+                            ctx.font="15px serif";
+                            ctx.fillText("●", acleft-30,actop);                                
+                            ctx.fillStyle="#FFFFFF";
+                            ctx.fillText("?????????", acleft,actop);        
+                        }
+                    }    
+                    ctx.fillStyle="rgba(" + [0,0,0,0.5] + ")";
+                    ctx.fillRect(400,470,20,20);
+                    ctx.fillRect(440,470,20,20);
+                    ctx.textAlign = "left";
+                    ctx.font="16px serif";
+                    ctx.fillStyle="#AAAAAA";
+                    ctx.fillText("<",406,485);
+                    ctx.fillStyle="#FFFFFF";
+                    ctx.fillText(">",446,485);
+                } else if(viewachievement==2){
+                    ////////////////////////////////////                 view graph
+                    pastratingnum = localStorage.getItem("pastratingnum");
+                    for (var i = 0; i < pastratingnum;i++) pastrating[i] = localStorage.getItem("pastrating" + i);
+                    var min=pastrating[0],max=pastrating[0];
+                    for (var i = 0; i < pastratingnum;i++){ 
+                        if (min > pastrating[i]) min = pastrating[i];
+                        if (max < pastrating[i]) max = pastrating[i];
                     }
-                }                
+                    min = Math.floor(min/100) * 100;
+                    max=Math.ceil(max / 100) * 100;
+                    if (max == min) max+=100;
+                    for (var i = 0; i <= (max-min) / 100;i++){
+                        ctx.fillStyle="#FFFFFF";
+                        ctx.fillRect(100,(min+i*100)*(400-120)/(min-max) + (400*max-120*min)/(max-min),cwidth-200,1);
+                        ctx.font="10pt serif";
+                        ctx.fillStyle=coloring(min+i*100);
+                        ctx.fillText(min+100*i,100,(min+i*100)*(400-120)/(min-max) + (400*max-120*min)/(max-min)-10);
+                    }
+                    for (var i = 0; i < pastratingnum; i++){
+                        var pleft = 150+((pastratingnum -i-1)*5300)/(pastratingnum+1);
+                        var ptop=pastrating[i] * (400-120) / (min - max) + (400*max-120*min)/(max-min);
+                        if (i != 0){
+                            ctx.beginPath();
+                            ctx.moveTo(150+((pastratingnum -i)*5300)/(pastratingnum+1),pastrating[i-1] * (400-120) / (min - max) + (400*max-120*min)/(max-min));
+                            ctx.lineTo(pleft,ptop);
+                            ctx.lineWidth=1;
+                            ctx.strokeStyle="#FFFFFF";
+                            ctx.stroke();
+                        }
+                        ctx.fillStyle=coloring(pastrating[i]);
+                        ctx.font="12px serif"
+                        ctx.fillText("●",pleft-3,ptop+3);
+                    }
+                    ctx.font="16px serif";
+                    ctx.fillStyle="#FFFFFF";
+                    ctx.fillText("battle: " + battlenumber,100,445);
+                    ctx.fillText("win: " + winnumber,250,445);
+                    ctx.fillText("WP: " + Math.round(winnumber*100/battlenumber) + "%", 380,445);
+                    ctx.fillStyle="rgba(" + [0,0,0,0.5] + ")";
+                    ctx.fillRect(400,470,20,20);
+                    ctx.fillRect(440,470,20,20);
+                    ctx.textAlign = "left";
+                    ctx.fillStyle="#FFFFFF";
+                    ctx.font="16px serif";
+                    ctx.fillStyle="#FFFFFF";
+                    ctx.fillText("<",406,485);
+                    ctx.fillStyle="#AAAAAA";
+                    ctx.fillText(">",446,485);
+                }
             }
             ctx.textAlign = "center";
             ctx.fillStyle="#FFFFFF";
@@ -275,15 +338,21 @@ function loop(){
                 ////////////////////////////////win or lose
                 if (myaction == 0 && enemyaction == 1){
                     drating=Math.floor(Math.atan(-0.005*(enemyrating-200))*20 - 33);
+                    drating*= (3.75/(turn+5) + 0.75);
+                    drating=Math.floor(drating);
                     rating+=drating;
+                    rating=Math.floor(rating);
                     gotachievement = 0;
                     bgm.src = "endBGM.mp3";
                     message = "YOU LOSE";
                     bgm.play();     
                     endflg=1;
                 } else if (myaction == 1 && enemyaction == 0){
-                    drating=Math.floor(Math.atan(-0.005*enemyrating)*30 + 60);
+                    drating=Math.floor(Math.atan(-0.003*enemyrating)*30 + 60);
+                    drating*= (3.75/(turn+5) + 0.75);
+                    drating=Math.floor(drating);
                     rating+=drating;
+                    rating=Math.floor(rating);
                     ///////////////////////////    achievements check ///////////////////////////
                     winnumber=localStorage.getItem("winnumber");
                     winnumber++;
@@ -349,12 +418,12 @@ function loop(){
                         gotachievementnumber[gotachievement] = 9;
                         gotachievement++;
                     }
-                    if (achievementstatus[10] == 0 && maxlemon >= 5){
+                    if (achievementstatus[10] == 0 && maxlemon >= 4){
                         achievementstatus[10] = 1;
                         gotachievementnumber[gotachievement] = 10;
                         gotachievement++;
                     }
-                    if (achievementstatus[11] == 0 && maxattack >= 5){
+                    if (achievementstatus[11] == 0 && maxattack >= 4){
                         achievementstatus[11] = 1;
                         gotachievementnumber[gotachievement] = 11;
                         gotachievement++;
@@ -372,13 +441,23 @@ function loop(){
                         }
                     }
                     localStorage.setItem("battlenumber",battlenumber);
-                    /////////////////////////////////////////////////////////////////////////////
+                    /////////////////////////////////////////////////////////////////////////////    UPDATE local Storage
                     localStorage.setItem("rating", rating);
-                    for (var i = 0; i < 20; i++){
+                    for (var i = 0; i < 50; i++){
                         localStorage.setItem("achievementstatus" + i,achievementstatus[i]);
                     }
-
-                    if (gotachievement) achievementsound.play();
+                    pastratingnum = localStorage.getItem("pastratingnum");
+                    for (var i = 0; i < pastratingnum; i++){
+                        pastrating[i+1] = localStorage.getItem("pastrating"+i);
+                    }
+                    pastrating[0] = rating;
+                    pastratingnum++;
+                    if (pastratingnum > 50) pastratingnum = 50;
+                    localStorage.setItem("pastratingnum",pastratingnum);
+                    for (var i = 0; i < pastratingnum; i++){
+                        localStorage.setItem("pastrating" + i,pastrating[i]);
+                    }
+                    if (gotachievement) achievementsound.play();/////////////////// achievement sound
                 }
                 ////////////////////////////////inclement or declement of lemon
                 if (myaction == 0) myattack++;
@@ -480,14 +559,16 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
     };
     if (viewachievement == 0){
         if ((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
-        && (square.y <= point.y && point.y <= square.y + square.h))
-        viewachievement = 1;
-        se_click.play();
+        && (square.y <= point.y && point.y <= square.y + square.h)){
+            viewachievement = 1;
+            se_click.play();    
+        }
     } else{
         if ((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
-        && (square.y <= point.y && point.y <= square.y + square.h))
-        viewachievement = 0;
-        se_click.play();
+        && (square.y <= point.y && point.y <= square.y + square.h)){
+            viewachievement = 0;
+            se_click.play();    
+        }
 
         var square = { //square of show button
             x: 700, y: 60,  
@@ -496,6 +577,28 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
         if ((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
         && (square.y <= point.y && point.y <= square.y + square.h)){
             if(window.confirm("Are you sure? Your progress will be lost forever.")) resetachievement();
+        }
+    }
+    var square = { //square of viewachievement_left button
+        x: 395, y: 465,  
+        w: 30, h: 30  
+    };
+    if (viewachievement == 2){
+        if ((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
+        && (square.y <= point.y && point.y <= square.y + square.h)){
+            viewachievement = 1;
+            se_click.play();
+        }
+    };
+    var square = { //square of viewachievement_right button
+        x: 435, y: 465,  
+        w: 30, h: 30  
+    };
+    if (viewachievement == 1){
+        if ((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
+        && (square.y <= point.y && point.y <= square.y + square.h)){
+            viewachievement = 2;
+            se_click.play();        
         }
     }
     var square = { //square of start button
