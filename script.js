@@ -76,6 +76,8 @@ function resetachievement(){
     winnumber=0;
     battlenumber=0;
     rating = 0;
+    pastratingnum=0;
+    pastrating=[];
     for (var i = 0; i < 20; i++) {
         achievementstatus[i] = 0;
         localStorage.setItem("achievementstatus"+i,0);
@@ -83,6 +85,8 @@ function resetachievement(){
     localStorage.setItem("winnumber",winnumber);
     localStorage.setItem("battlenumber",battlenumber);
     localStorage.setItem("rating",rating);
+    for (var i = 0; i <= 50; i++) localStorage.setItem("pastrating"+i,0);
+    localStorage.setItem("pastratingnum",0);
     return 0;
 }
 
@@ -230,7 +234,11 @@ function loop(){
                     ctx.fillStyle="#FFFFFF";
                     ctx.fillText("battle: " + battlenumber,100,445);
                     ctx.fillText("win: " + winnumber,250,445);
-                    ctx.fillText("WP: " + Math.round(winnumber*100/battlenumber) + "%", 380,445);
+                    if (battlenumber!=0){                          
+                        ctx.fillText("WP: " + Math.round(winnumber*100/battlenumber) + "%", 380,445);
+                    } else{
+                        ctx.fillText("WP: ---", 380,445);
+                    }
                     ctx.fillStyle="rgba(" + [0,0,0,0.5] + ")";
                     ctx.fillRect(400,470,20,20);
                     ctx.fillRect(440,470,20,20);
@@ -307,7 +315,7 @@ function loop(){
             ctx.fillStyle="#FFFFFF";
             ctx.textAligh="left";
             ctx.font="20px serif";
-            ctx.fillText("Tweet!", 672,437);
+            ctx.fillText("Tweet!", 632,437);
             ctx.textAlign="center";
             ctx.fillStyle=coloring();
             ctx.font="20px serif";
@@ -631,20 +639,20 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
         var twmessage="";
         for (var i = 0;i < gotachievement; i++){
             twmessage +='NEW ACHIEVEMENT! >>>"' + achievementname[gotachievementnumber[i]] + '"\n';
-            if (i == gotachievementnumber-1) twmessage+="\n";
+            if (i == (gotachievementnumber-1)) twmessage+="\n\n";
         }
         if (message == "YOU WIN"){
             twmessage+="I won!";
         }else{
-            twmessage+="I lose!";
+            twmessage+="I lost!";
         }
-        twmessage = twmessage + "My new rating is " + rating + ".\n ----------------- \n Why don't you play CCLemon?\n" + URL;
+        twmessage = twmessage + "My new rating is " + rating + ".\n - - - - - - - - - - - -\n Why don't you play CCLemon?\n" + URL;
         if (navigator.userAgent.indexOf('iPhone') > 0 || navigator.userAgent.indexOf('iPad') > 0 || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
             location.href = twitter_url + EUC(twmessage);
         }else{
             window.open(twitter_url + EUC(twmessage), "_blank","top=50,left=50,width=500,height=500,scrollbars=1,location=0,menubar=0,toolbar=0,status=1,directories=0,resizable=1");
         }
-      } //////////////////tweet
+    } //////////////////tweet
 
     var square = { //square of end button
         x: 0, y: 0,  
