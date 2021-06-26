@@ -193,14 +193,16 @@ function loop(){
                 } else if(viewachievement==2){
                     ////////////////////////////////////                 view graph
                     pastratingnum = localStorage.getItem("pastratingnum");
-                    for (var i = 0; i < pastratingnum;i++) pastrating[i] = localStorage.getItem("pastrating" + i);
+                    for (var i = 0; i < pastratingnum;i++) pastrating[i] = Number(localStorage.getItem("pastrating" + i));
                     var min=pastrating[0],max=pastrating[0];
                     for (var i = 0; i < pastratingnum;i++){ 
                         if (min > pastrating[i]) min = pastrating[i];
                         if (max < pastrating[i]) max = pastrating[i];
                     }
-                    min = Math.floor(min/100) * 100;
-                    max=Math.ceil(max / 100) * 100;
+                    //min = Math.floor(min/100) * 1000;
+                    //max=Math.ceil(max / 100) * 1000;
+                    min -= (min%100);
+                    max += (100-max%100);
                     if (max == min) max+=100;
                     for (var i = 0; i <= (max-min) / 100;i++){
                         ctx.fillStyle="#FFFFFF";
@@ -260,7 +262,7 @@ function loop(){
             ctx.fill();    
         };
         background.src = "./background_town.jpg";
-    }else if (endflg ==1) { //ending window//////////////////////////
+    }else if (endflg) { //ending window//////////////////////////
         canvas=document.getElementById("canvas");
         ctx=canvas.getContext("2d");    
         var background = new Image();
@@ -276,11 +278,11 @@ function loop(){
             ctx.fillText("click or tap to continue", 440,450);
             ctx.font="20px serif";
             if (drating > 0){
-                ctx.fillText("new rating:          (+" + drating + ")", 440,340);
+                ctx.fillText("new rating:            (+" + drating + ")", 443,342);
             } else if(drating < 0){
-                ctx.fillText("new rating:          (" + drating + ")", 440,340);
+                ctx.fillText("new rating:            (" + drating + ")", 443,342);
             } else{
-                ctx.fillText("new rating:          (0)", 440,340);
+                ctx.fillText("new rating:            (0)", 460,340);
             }
             for (var i = 0; i < gotachievement;i++){
                 ctx.textAlign="left";
@@ -300,6 +302,12 @@ function loop(){
                 ctx.fillStyle="#FFFFFF";
                 ctx.fillText('You got "' + achievementname[gotachievementnumber[i]] + '"',630,i*40+120);
             }
+            ctx.fillStyle="rgba(" + [0,0,0,0.5] + ")";
+            ctx.fillRect(600,410,150,40);
+            ctx.fillStyle="#FFFFFF";
+            ctx.textAligh="left";
+            ctx.font="20px serif";
+            ctx.fillText("Tweet!", 672,437);
             ctx.textAlign="center";
             ctx.fillStyle=coloring();
             ctx.font="20px serif";
@@ -610,6 +618,33 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
          && (square.y <= point.y && point.y <= square.y + square.h)  // vertical
          && (startflg)&&(!viewachievement) //startflg    
 
+    var square = { //square of tweet button
+        x: 600, y: 410,  
+        w: 150, h: 40  
+    };
+    if((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
+      && (square.y <= point.y && point.y <= square.y + square.h)  // vertical
+      && (endflg)){
+        var EUC = encodeURIComponent;
+        var twitter_url = "https://twitter.com/intent/tweet?text=";
+        var URL = window.location.href;
+        var twmessage="";
+        for (var i = 0;i < gotachievement; i++){
+            twmessage +='NEW ACHIEVEMENT! >>>"' + achievementname[gotachievementnumber[i]] + '"\n';
+            if (i == gotachievementnumber-1) twmessage+="\n";
+        }
+        if (message == "YOU WIN"){
+            twmessage+="I won!";
+        }else{
+            twmessage+="I lose!";
+        }
+        twmessage = twmessage + "My new rating is " + rating + ".\n ----------------- \n Why don't you play CCLemon?\n" + URL;
+        if (navigator.userAgent.indexOf('iPhone') > 0 || navigator.userAgent.indexOf('iPad') > 0 || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
+            location.href = twitter_url + EUC(twmessage);
+        }else{
+            window.open(twitter_url + EUC(twmessage), "_blank","top=50,left=50,width=500,height=500,scrollbars=1,location=0,menubar=0,toolbar=0,status=1,directories=0,resizable=1");
+        }
+      } //////////////////tweet
 
     var square = { //square of end button
         x: 0, y: 0,  
@@ -618,7 +653,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
     const end =
          (square.x <= point.x && point.x <= square.x + square.w)  // horizontal
       && (square.y <= point.y && point.y <= square.y + square.h)  // vertical
-      && (endflg) //startflg    
+      && (endflg) //endflg    
 
     if (start) {/////////////////////////////////////////////initialize
         startflg=0;
