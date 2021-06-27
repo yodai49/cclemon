@@ -36,8 +36,8 @@ var achievementname = ["Welcome to CC Lemon","Thunder","Comet","LaserBeam","Chal
 "You like lemons", "Fierce Attacker", "Solid Defender", "The first step", "Green lemon","Fly high","Pale Blue","Sour Lemonade","An orange","Legendary CCLemonist"];
 var achievementexp = [
 "You won.", "You won 5 times.", "You won 10 times.", "You won 50 times.", "You battled 5 times.", "You battled 25 times", "You battled 100 times",
-"Your rating was less than 0.", "You won at the first turn.", "You experienced over 25 turns game.", "You choose lemon 5 times in a low",
-"You choose Attack 5 times in a low.", "You choose Barrier 10 times in a row.", "Your rating is more than 100.",
+"Your rating was less than 0.", "You won at the first turn.", "You experienced over 25 turns game.", "You choose lemon 5 times in a row",
+"You choose Attack 5 times in a row.", "You choose Barrier 10 times in a row.", "Your rating is more than 100.",
 "Your rating is more than 200.","Your rating is more than 300.","Your rating is more than 400.","Your rating is more than 500.",
 "Your rating is more than 600.","Your rating is more than 700."
 ];
@@ -67,8 +67,14 @@ function coloring(colrating){ ////////////coloring or rating
         return "#DDDD00";
     } else if(colrating < 700){
         return "#FF9900";
-    } else{
+    } else if(colrating < 1000){
         return "#FF0000";
+    } else if (colrating < 1300){
+        return "#DDDDDD";
+    } else if(colrating < 1600){
+        return "#D1CD00";
+    } else{
+        return "#CFFFFF";
     }
 }
 
@@ -247,6 +253,16 @@ function loop(){
                     ctx.font="16px serif";
                     ctx.fillStyle="#FFFFFF";
                     ctx.fillText("<",406,485);
+                    ctx.fillStyle="#FFFFFF";
+                    ctx.fillText(">",446,485);
+                } else if(viewachievement == 3){
+                    ctx.fillRect(400,470,20,20);
+                    ctx.fillRect(440,470,20,20);
+                    ctx.textAlign = "left";
+                    ctx.fillStyle="#FFFFFF";
+                    ctx.font="16px serif";
+                    ctx.fillStyle="#FFFFFF";
+                    ctx.fillText("<",406,485);
                     ctx.fillStyle="#AAAAAA";
                     ctx.fillText(">",446,485);
                 }
@@ -315,7 +331,7 @@ function loop(){
             ctx.fillStyle="#FFFFFF";
             ctx.textAligh="left";
             ctx.font="20px serif";
-            ctx.fillText("Tweet!", 632,437);
+            ctx.fillText("Tweet!", 662,437);
             ctx.textAlign="center";
             ctx.fillStyle=coloring();
             ctx.font="20px serif";
@@ -356,6 +372,7 @@ function loop(){
                     drating=Math.floor(Math.atan(-0.005*(enemyrating-200))*20 - 33);
                     drating*= (3.75/(turn+5) + 0.75);
                     drating=Math.floor(drating);
+                    rating+=50;
                     rating+=drating;
                     rating=Math.floor(rating);
                     gotachievement = 0;
@@ -367,6 +384,7 @@ function loop(){
                     drating=Math.floor(Math.atan(-0.003*enemyrating)*30 + 60);
                     drating*= (3.75/(turn+5) + 0.75);
                     drating=Math.floor(drating);
+                    rating+=50;
                     rating+=drating;
                     rating=Math.floor(rating);
                     ///////////////////////////    achievements check ///////////////////////////
@@ -434,12 +452,12 @@ function loop(){
                         gotachievementnumber[gotachievement] = 9;
                         gotachievement++;
                     }
-                    if (achievementstatus[10] == 0 && maxlemon >= 4){
+                    if (achievementstatus[10] == 0 && maxlemon >= 5){
                         achievementstatus[10] = 1;
                         gotachievementnumber[gotachievement] = 10;
                         gotachievement++;
                     }
-                    if (achievementstatus[11] == 0 && maxattack >= 4){
+                    if (achievementstatus[11] == 0 && maxattack >= 5){
                         achievementstatus[11] = 1;
                         gotachievementnumber[gotachievement] = 11;
                         gotachievement++;
@@ -599,10 +617,10 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
         x: 395, y: 465,  
         w: 30, h: 30  
     };
-    if (viewachievement == 2){
+    if (viewachievement == 2 || viewachievement == 3){
         if ((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
         && (square.y <= point.y && point.y <= square.y + square.h)){
-            viewachievement = 1;
+            viewachievement--;
             se_click.play();
         }
     };
@@ -610,10 +628,10 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
         x: 435, y: 465,  
         w: 30, h: 30  
     };
-    if (viewachievement == 1){
+    if (viewachievement == 1 || viewachievement == 2){
         if ((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
         && (square.y <= point.y && point.y <= square.y + square.h)){
-            viewachievement = 2;
+            viewachievement++;
             se_click.play();        
         }
     }
@@ -674,6 +692,8 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
         currentattack=0;
         maxbarrier=0;
         currentbarrier=0;
+        rating-=50;
+        localStorage.setItem("rating",rating);
         enemyrating=Math.floor(rating-40 + 80  * Math.random());
         bgm.src = "mainBGM.mp3";
         bgm.play();
