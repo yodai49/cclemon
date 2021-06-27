@@ -267,20 +267,20 @@ function loop(){
                         if (rankingname[i] != null && rankingname[i] != ""){
                             ctx.fillStyle="#FFFFFF";
                             ctx.font="14px serif";
-                            ctx.fillText(rankingname[i], acleft-30,actop);                                
+                            ctx.fillText(rankingname[i], rankleft-30,ranktop);                                
                             ctx.fillStyle=coloring(rankingrating[i]);
                             ctx.font="12px serif";
-                            ctx.fillText(rankingrating[i], acleft+50,actop);  
+                            ctx.fillText(rankingrating[i], rankleft+50,ranktop);  
                             ctx.fillStyle="#FFFFFF"                              
                             ctx.font="12px serif";
-                            ctx.fillText(rankingdata[i], acleft+130,actop+15);                                    
+                            ctx.fillText(rankingdata[i], rankleft+130,ranktop+15);                                    
                         } else{
                             ctx.fillStyle="#FFFFFF";
                             ctx.font="14px serif";
-                            ctx.fillText("- - -", acleft-30,actop);                                
+                            ctx.fillText("- - -", rankleft-30,ranktop);                                
                             ctx.font="12px serif";
-                            ctx.fillText("- - ", acleft+50,actop);   
-                            ctx.fillText("--/--/--", acleft+130,actop+15);                                    
+                            ctx.fillText("- - ", rankleft+50,ranktop);   
+                            ctx.fillText("--/--/--", rankleft+130,ranktop+15);                                    
                         }
                     }    
                     ctx.fillStyle="rgba(" + [0,0,0,0.5] + ")";
