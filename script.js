@@ -31,12 +31,15 @@ var currentattack;
 var maxlemon;
 var maxbarrier;
 var maxattack;
+var rankingname=[];
+var rankingdata=[];
+var rankingrating=[];
 var achievementstatus = [];
 var achievementname = ["Welcome to CC Lemon","Thunder","Comet","LaserBeam","Challenger","Veteran","Specialist","Dont Give up","Speed Hitman","NECK and NECK",
 "You like lemons", "Fierce Attacker", "Solid Defender", "The first step", "Green lemon","Fly high","Pale Blue","Sour Lemonade","An orange","Legendary CCLemonist"];
 var achievementexp = [
 "You won.", "You won 5 times.", "You won 10 times.", "You won 50 times.", "You battled 5 times.", "You battled 25 times", "You battled 100 times",
-"Your rating was less than 0.", "You won at the first turn.", "You experienced over 25 turns game.", "You choose lemon 5 times in a row",
+"Your rating was less than 0.", "You won at the first turn.", "You experienced a game over 25 turns.", "You choose lemon 5 times in a row",
 "You choose Attack 5 times in a row.", "You choose Barrier 10 times in a row.", "Your rating is more than 100.",
 "Your rating is more than 200.","Your rating is more than 300.","Your rating is more than 400.","Your rating is more than 500.",
 "Your rating is more than 600.","Your rating is more than 700."
@@ -255,7 +258,32 @@ function loop(){
                     ctx.fillText("<",406,485);
                     ctx.fillStyle="#FFFFFF";
                     ctx.fillText(">",446,485);
-                } else if(viewachievement == 3){
+                } else if(viewachievement == 3){ ////////////////////////////////// ranking
+                    for (var i = 0; i < 15; i++){
+                        var rankleft;
+                        var ranktop;
+                        rankleft = 140;
+                        ranktop = 30 * i + 88;
+                        if (rankingname[i] != null && rankingname[i] != ""){
+                            ctx.fillStyle="#FFFFFF";
+                            ctx.font="14px serif";
+                            ctx.fillText(rankingname[i], acleft-30,actop);                                
+                            ctx.fillStyle=coloring(rankingrating[i]);
+                            ctx.font="12px serif";
+                            ctx.fillText(rankingrating[i], acleft+50,actop);  
+                            ctx.fillStyle="#FFFFFF"                              
+                            ctx.font="12px serif";
+                            ctx.fillText(rankingdata[i], acleft+130,actop+15);                                    
+                        } else{
+                            ctx.fillStyle="#FFFFFF";
+                            ctx.font="14px serif";
+                            ctx.fillText("- - -", acleft-30,actop);                                
+                            ctx.font="12px serif";
+                            ctx.fillText("- - ", acleft+50,actop);   
+                            ctx.fillText("--/--/--", acleft+130,actop+15);                                    
+                        }
+                    }    
+                    ctx.fillStyle="rgba(" + [0,0,0,0.5] + ")";
                     ctx.fillRect(400,470,20,20);
                     ctx.fillRect(440,470,20,20);
                     ctx.textAlign = "left";
@@ -632,6 +660,21 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
         if ((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
         && (square.y <= point.y && point.y <= square.y + square.h)){
             viewachievement++;
+            if (viewachievement==3){ //////////////////////////////// load ranking
+                var req = new XMLHttpRequest();
+                req.open("get","ranking.csv",true);
+                req.send(null);
+                req.onload=function(){
+                    var loadtemp=req.responseText.split("\n");
+                    var loadtemp2;
+                    for (var i = 0; i < loadtemp.length;i++){
+                        loadtemp2=loadtemp[i].split(",");
+                        rankingname[i] = loadtemp2[0];
+                        rankingrating[i]=loadtemp2[1];
+                        rankingdata[i] = loadtemp2[2];
+                    }
+                }
+            }
             se_click.play();        
         }
     }
