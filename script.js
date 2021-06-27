@@ -17,6 +17,7 @@ var mytop=350,enemytop=190;
 var gauge = 0,waittime=0; 
 var lemonl=170,attackl =370,barrierl=570;
 var rating = Number(localStorage.getItem("rating"));
+var myrankingname  = localStorage.getItem("myrankingname");
 var drating = 0;
 var modechange=1;
 var message;
@@ -53,6 +54,15 @@ var bgm = document.getElementById("mainBGM");
 var se_click = document.getElementById("se_click");
 se_click.volume=1.0;
 var achievementsound = document.getElementById("achievement");
+
+function checkname(entrynewname){ //0 no problem   else invalid
+    return 0;
+}
+function sortranking(){ // sort of ranking   result is in "new ranking"
+    for (var i = 0; i < 21; i++){
+        
+    }
+}
 
 function coloring(colrating){ ////////////coloring or rating
     if (colrating == null) colrating = rating;
@@ -264,10 +274,10 @@ function loop(){
                         var ranktop;
                         if (i < 11){
                             rankleft = 450;
-                            ranktop = 30*(i-15) + 88;
+                            ranktop = 30*i + 88;
                         } else{
                             rankleft = 140;
-                            ranktop = 30 * i + 88;
+                            ranktop = 30 * (i-11) + 88;
                         }
                         if (i == 0 || i == 11){
                             ctx.fillStyle="#FFFFFF";
@@ -275,31 +285,37 @@ function loop(){
                             ctx.fillText("    name", rankleft-30,ranktop);                                
                             ctx.font="12px serif";
                             ctx.fillText("rating", rankleft+50,ranktop);   
-                            ctx.fillText("date", rankleft+130,ranktop+15); 
+                            ctx.fillText("date", rankleft+130,ranktop); 
                         } else{
                             if (rankingname[i] != null && rankingname[i] != ""){
                                 ctx.fillStyle="#FFFFFF";
                                 ctx.font="14px serif";
                                 var ranknum = i;
-                                if (i > 15) ranknum--;
+                                if (i > 11) ranknum--;
                                 ctx.fillText(ranknum,rankleft-30,ranktop);
-                                ctx.fillText(rankingname[i], rankleft,ranktop);                                
+                                ctx.fillText(rankingname[ranknum], rankleft,ranktop);                                
                                 ctx.fillStyle=coloring(rankingrating[i]);
                                 ctx.font="12px serif";
-                                ctx.fillText(rankingrating[i], rankleft+70,ranktop);  
+                                ctx.fillText(rankingrating[ranknum], rankleft+70,ranktop);  
                                 ctx.fillStyle="#FFFFFF"                              
                                 ctx.font="12px serif";
-                                ctx.fillText(rankingdata[i], rankleft+150,ranktop);                                    
+                                ctx.fillText(rankingdata[ranknum], rankleft+150,ranktop);                                    
                             } else{
                                 ctx.fillStyle="#FFFFFF";
                                 ctx.font="14px serif";
-                                ctx.fillText("- - -", rankleft-30,ranktop);                                
+                                ctx.fillText("    - - -", rankleft-30,ranktop);                                
                                 ctx.font="12px serif";
                                 ctx.fillText("- - ", rankleft+50,ranktop);   
-                                ctx.fillText("--/--/--", rankleft+130,ranktop+15);                                    
+                                ctx.fillText("--/--/--", rankleft+130,ranktop);                                    
                             }
                         }
                     }    
+                    ctx.font="22px serif";
+                    ctx.fillStyle="rgba(" + [100,100,100,0.5] + ")";
+                    ctx.fillRect(130,430,100,30);
+                    ctx.textAlign="left";
+                    ctx.fillStyle="#FFFFFF";
+                    ctx.fillText("entry",155,450);
                     ctx.fillStyle="rgba(" + [0,0,0,0.5] + ")";
                     ctx.fillRect(400,470,20,20);
                     ctx.fillRect(440,470,20,20);
@@ -648,7 +664,6 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
             viewachievement = 0;
             se_click.play();    
         }
-
         var square = { //square of show button
             x: 700, y: 60,  
             w: 200, h: 50  
@@ -658,6 +673,41 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
             if(window.confirm("Are you sure? Your progress will be lost forever.")) resetachievement();
         }
     }
+    var square = { //square of ranking entry button
+        x: 125, y: 425,  
+        w: 120, h: 40  
+    };
+    if (viewachievement == 3){
+        if ((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
+        && (square.y <= point.y && point.y <= square.y + square.h)){
+            se_click.play();
+            myrankingname=localStorage.getItem("myrankingname");
+            if (myrankingname == null) myrankingname = "";
+            var entryname = window.prompt("Please enter your name.",myrankingname);
+            if (!checkname(entryname)){
+                //entrynameとのかぶりを検索→一致があればそれを書き換え→なければ配列の末尾に追加→（共通）並び替え→ファイルへの書き込み
+                var used = -1;
+                for (var i = 0; i < 20;i++){
+                    if (rankingname[i] == entryname) used=i;
+                }
+                var now = new Date();
+                if (used == -1){
+                    rankingname[20] = entryname;
+                    rankingrating[20] = rating;
+                    rankingdata[20] = now.getFullYear() % 2000 + "/" + now.getMonth + "/" + now.getdate + " " + now.gettime;
+                } else {
+                    rankingrating[used] = rating;
+                    rankingdata[used] = now.getFullYear() % 2000 + "/" + now.getMonth + "/" + now.getdate + " " + now.gettime;
+                }
+                sortranking();
+
+                localStorage.setItem("myrankingname",myrankingname);
+            } else{
+                window.alert("Your name is invalid");
+            }
+        }
+    };
+
     var square = { //square of viewachievement_left button
         x: 395, y: 465,  
         w: 30, h: 30  
