@@ -56,11 +56,33 @@ se_click.volume=1.0;
 var achievementsound = document.getElementById("achievement");
 
 function checkname(entrynewname){ //0 no problem   else invalid
+    if (entrynewname == "") return -1;
     return 0;
 }
-function sortranking(){ // sort of ranking   result is in "new ranking"
+function sortranking(){ // sort of ranking
+    var newrankingname=[];
+    var newrankingdata=[];
+    var newrankingrating=[];
+    var isused=[];
+    var tempmax = rankingrating[0];
+    var tempmaxnum= 0;
+    for(var i = 0; i <= 21;i++) isused[i] = 0;
+    for (var i = 0; i <= 21; i++){
+        for (var j = 0; j <= 21; j++){
+            if (tempmax < rankingrating[j] && !isused[j]){
+                tempmax = rankingrating[j];
+                tempmaxnum=j;
+            }
+        }
+        newrankingname[i] = rankingname[tempmaxnum];
+        newrankingdata[i] = rankingdata[tempmaxnum];
+        newrankingrating[i] = rankingrating[tempmaxnum];
+        isused[tempmaxnum]=1;
+    }
     for (var i = 0; i < 21; i++){
-        
+        rankingdata[i] = newrankingdata[i];
+        rankingname[i]=newrankingname[i];
+        rankingrating[i]=newrankingrating[i];
     }
 }
 
