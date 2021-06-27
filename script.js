@@ -259,28 +259,45 @@ function loop(){
                     ctx.fillStyle="#FFFFFF";
                     ctx.fillText(">",446,485);
                 } else if(viewachievement == 3){ ////////////////////////////////// ranking
-                    for (var i = 0; i < 15; i++){
+                    for (var i = 0; i < 22; i++){
                         var rankleft;
                         var ranktop;
-                        rankleft = 140;
-                        ranktop = 30 * i + 88;
-                        if (rankingname[i] != null && rankingname[i] != ""){
-                            ctx.fillStyle="#FFFFFF";
-                            ctx.font="14px serif";
-                            ctx.fillText(rankingname[i], rankleft-30,ranktop);                                
-                            ctx.fillStyle=coloring(rankingrating[i]);
-                            ctx.font="12px serif";
-                            ctx.fillText(rankingrating[i], rankleft+50,ranktop);  
-                            ctx.fillStyle="#FFFFFF"                              
-                            ctx.font="12px serif";
-                            ctx.fillText(rankingdata[i], rankleft+130,ranktop+15);                                    
+                        if (i < 11){
+                            rankleft = 450;
+                            ranktop = 30*(i-15) + 88;
                         } else{
+                            rankleft = 140;
+                            ranktop = 30 * i + 88;
+                        }
+                        if (i == 0 || i == 11){
                             ctx.fillStyle="#FFFFFF";
                             ctx.font="14px serif";
-                            ctx.fillText("- - -", rankleft-30,ranktop);                                
+                            ctx.fillText("    name", rankleft-30,ranktop);                                
                             ctx.font="12px serif";
-                            ctx.fillText("- - ", rankleft+50,ranktop);   
-                            ctx.fillText("--/--/--", rankleft+130,ranktop+15);                                    
+                            ctx.fillText("rating", rankleft+50,ranktop);   
+                            ctx.fillText("date", rankleft+130,ranktop+15); 
+                        } else{
+                            if (rankingname[i] != null && rankingname[i] != ""){
+                                ctx.fillStyle="#FFFFFF";
+                                ctx.font="14px serif";
+                                var ranknum = i;
+                                if (i > 15) ranknum--;
+                                ctx.fillText(ranknum,rankleft-30,ranktop);
+                                ctx.fillText(rankingname[i], rankleft,ranktop);                                
+                                ctx.fillStyle=coloring(rankingrating[i]);
+                                ctx.font="12px serif";
+                                ctx.fillText(rankingrating[i], rankleft+70,ranktop);  
+                                ctx.fillStyle="#FFFFFF"                              
+                                ctx.font="12px serif";
+                                ctx.fillText(rankingdata[i], rankleft+150,ranktop);                                    
+                            } else{
+                                ctx.fillStyle="#FFFFFF";
+                                ctx.font="14px serif";
+                                ctx.fillText("- - -", rankleft-30,ranktop);                                
+                                ctx.font="12px serif";
+                                ctx.fillText("- - ", rankleft+50,ranktop);   
+                                ctx.fillText("--/--/--", rankleft+130,ranktop+15);                                    
+                            }
                         }
                     }    
                     ctx.fillStyle="rgba(" + [0,0,0,0.5] + ")";
