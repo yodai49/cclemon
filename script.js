@@ -719,7 +719,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                     rankingrating[used] = rating;
                     rankingdata[used] = now.getFullYear() % 2000 + "/" + now.getMonth + "/" + now.getdate + " " + now.gettime;
                 }
-                sortranking();
+                sortranking();/*
                 var data = {
                     newname : entryname,
                     newrating : rating,
@@ -730,12 +730,23 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                         window.alert("succeed!");
                     }
                 })*/
+                
+                jQuery.ajax({
+                    
+                    type: 'post',
+                    url: 'https://yodai49.github.io/cclemon/index.php', //送信先PHPファイル
+                    data: {"twrite": "dedebug"}, //POSTするデータ
+                    success: function(){ //正常に処理が完了した時
+                        window.alert("success!");
+                    }
+                });
+                /*
                 var request = new XMLHttpRequest();
                 request.open("GET","https://yodai49.github.io/cclemon/index.php", true);
                 request.responseType = 'json';
                 request.addEventListener('load', function (response) {
                 });
-                request.send();
+                request.send();*/
 
                 localStorage.setItem("myrankingname",myrankingname);
             } else{
