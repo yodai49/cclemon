@@ -721,10 +721,14 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                 }
                 sortranking();
 
-                var data={newname:$("#newname").val(),newrating:$("#newrating").val(),newdate:$("#newdate").val()};
+                var data = {
+                    newname : entryname,
+                    newrating : rating,
+                    newdate : "this is a test"
+                };
                 $.ajax({
                     type:"post",url:"index.php",data:data,success: function(data,dataType){
-
+                        window.alert("succeed!");
                     }
                 })
 
