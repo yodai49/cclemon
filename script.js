@@ -244,8 +244,6 @@ function loop(){
                         if (min > pastrating[i]) min = pastrating[i];
                         if (max < pastrating[i]) max = pastrating[i];
                     }
-                    //min = Math.floor(min/100) * 1000;
-                    //max=Math.ceil(max / 100) * 1000;
                     min -= (min%100);
                     max += (100-max%100);
                     if (max == min) max+=100;
@@ -295,10 +293,10 @@ function loop(){
                         var rankleft;
                         var ranktop;
                         if (i < 11){
-                            rankleft = 450;
+                            rankleft = 140;
                             ranktop = 30*i + 88;
                         } else{
-                            rankleft = 140;
+                            rankleft = 450;
                             ranktop = 30 * (i-11) + 88;
                         }
                         if (i == 0 || i == 11){
@@ -309,11 +307,11 @@ function loop(){
                             ctx.fillText("rating", rankleft+50,ranktop);   
                             ctx.fillText("date", rankleft+130,ranktop); 
                         } else{
-                            if (rankingname[i] != null && rankingname[i] != ""){
+                            var ranknum = i;
+                            if (i > 11) ranknum--;
+                            if (rankingname[ranknum] != null || rankingname[ranknum] != "" || rankingrating[ranknum] == -1){
                                 ctx.fillStyle="#FFFFFF";
                                 ctx.font="14px serif";
-                                var ranknum = i;
-                                if (i > 11) ranknum--;
                                 ctx.fillText(ranknum,rankleft-30,ranktop);
                                 ctx.fillText(rankingname[ranknum], rankleft,ranktop);                                
                                 ctx.fillStyle=coloring(rankingrating[i]);
@@ -722,6 +720,13 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                     rankingdata[used] = now.getFullYear() % 2000 + "/" + now.getMonth + "/" + now.getdate + " " + now.gettime;
                 }
                 sortranking();
+
+                var data={newname:$("#newname").val(),newrating:$("#newrating").val(),newdate:$("#newdate").val()};
+                $.ajax({
+                    type:"post",url:"index.php",data:data,success: function(data,dataType){
+
+                    }
+                })
 
                 localStorage.setItem("myrankingname",myrankingname);
             } else{
