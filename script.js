@@ -733,7 +733,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                 
                 jQuery.ajax({
                     
-                    //type: 'get',jj
+                    type: 'get',
                     dataType:"json",
                     data: {"twrite": "dedebug"}, //POSTするデータ
                     url: 'https://yodai49.github.io/cclemon/index.php', //送信先PHPファイル
