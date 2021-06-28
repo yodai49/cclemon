@@ -720,17 +720,19 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                     rankingdata[used] = now.getFullYear() % 2000 + "/" + now.getMonth + "/" + now.getdate + " " + now.gettime;
                 }
                 sortranking();
-
                 var data = {
                     newname : entryname,
                     newrating : rating,
                     newdate : "this is a test"
                 };
-                $.ajax({
+/*                $.ajax({
                     type:"post",url:"index.php",data:data,success: function(data,dataType){
                         window.alert("succeed!");
                     }
-                })
+                })*/
+                var request = new XMLHttpRequest();
+                request.open("GET","index.php", true);
+                request.responseType = 'json';
 
                 localStorage.setItem("myrankingname",myrankingname);
             } else{
