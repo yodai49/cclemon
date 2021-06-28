@@ -731,7 +731,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                     }
                 })*/
                 var request = new XMLHttpRequest();
-                request.open("GET","index.php", true);
+                request.open("GET","https://yodai49.github.io/cclemon/index.php", true);
                 request.responseType = 'json';
 
                 localStorage.setItem("myrankingname",myrankingname);
