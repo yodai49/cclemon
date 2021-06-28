@@ -730,7 +730,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                         window.alert("succeed!");
                     }
                 })*/
-                
+                /*
                 jQuery.ajax({
                     
                     type: 'get',
@@ -739,14 +739,15 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                     success: function(){ //正常に処理が完了した時
                         window.alert("success!");
                     }
-                });
-                /*
+                });*/
+
                 var request = new XMLHttpRequest();
                 request.open("GET","https://yodai49.github.io/cclemon/index.php", true);
                 request.responseType = 'json';
                 request.addEventListener('load', function (response) {
+                    window.alert("success!!!!");
                 });
-                request.send();*/
+                request.send();
 
                 localStorage.setItem("myrankingname",myrankingname);
             } else{
