@@ -734,7 +734,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                 jQuery.ajax({
                     
                     type: 'post',
-                    url: 'https://yodai49.github.io/cclemon/index.php', //送信先PHPファイル
+                    url: 'index.php', //送信先PHPファイル
                     data: {"twrite": "dedebug"}, //POSTするデータ
                     success: function(){ //正常に処理が完了した時
                         window.alert("success!");
