@@ -705,7 +705,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
             if (myrankingname == null) myrankingname = "";
             var entryname = window.prompt("Please enter your name.",myrankingname);
             if (!checkname(entryname)){
-                //entrynameとのかぶりを検索→一致があればそれを書き換え→なければ配列の末尾に追加→（共通）並び替え→ファイルへの書き込み
+                /*
                 var used = -1;
                 for (var i = 0; i < 20;i++){
                     if (rankingname[i] == entryname) used=i;
@@ -729,7 +729,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                     type:"post",url:"index.php",data:data,success: function(data,dataType){
                         window.alert("succeed!");
                     }
-                })*/
+                })
                 
                 jQuery.ajax({
                     
@@ -772,7 +772,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
         x: 435, y: 465,  
         w: 30, h: 30  
     };
-    if (viewachievement == 1 || viewachievement == 2){
+    if (viewachievement == 1){
         if ((square.x <= point.x && point.x <= square.x + square.w)  // horizontal
         && (square.y <= point.y && point.y <= square.y + square.h)){
             viewachievement++;
@@ -783,6 +783,11 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
                 req.onload=function(){
                     var loadtemp=req.responseText.split("\n");
                     var loadtemp2;
+                    for(var i = 0; i < 20;i++){
+                        rankingname[i] = "";
+                        rankingrating[i] = 0;
+                        rankingdata[i] = "";
+                    }
                     for (var i = 0; i < loadtemp.length;i++){
                         loadtemp2=loadtemp[i].split(",");
                         rankingname[i] = loadtemp2[0];
@@ -823,7 +828,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
         }else{
             twmessage+="I lost!";
         }
-        twmessage = twmessage + "My new rating is " + rating + ".\n - - - - - - - - - - - -\n Why don't you play CCLemon?\n" + URL;
+        twmessage = twmessage + "My new rating is " + rating + ".\n - - - - - - - - - - - -\n Why don't you play CCLemon?\n #CCLEMON" + URL;
         if (navigator.userAgent.indexOf('iPhone') > 0 || navigator.userAgent.indexOf('iPad') > 0 || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
             location.href = twitter_url + EUC(twmessage);
         }else{
