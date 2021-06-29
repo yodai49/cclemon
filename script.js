@@ -286,7 +286,7 @@ function loop(){
                     ctx.font="16px serif";
                     ctx.fillStyle="#FFFFFF";
                     ctx.fillText("<",406,485);
-                    ctx.fillStyle="#FFFFFF";
+                    ctx.fillStyle="#AAAAAA";
                     ctx.fillText(">",446,485);
                 } else if(viewachievement == 3){ ////////////////////////////////// ranking
                     for (var i = 0; i < 22; i++){
@@ -828,7 +828,7 @@ document.getElementById("canvas").addEventListener("click", (e)=>{
         }else{
             twmessage+="I lost!";
         }
-        twmessage = twmessage + "My new rating is " + rating + ".\n - - - - - - - - - - - -\n Why don't you play CCLemon?\n #CCLEMON" + URL;
+        twmessage = twmessage + "My new rating is " + rating + ".\n - - - - - - - - - - - -\n Why don't you play CCLemon?\n #CCLEMON \n" + URL;
         if (navigator.userAgent.indexOf('iPhone') > 0 || navigator.userAgent.indexOf('iPad') > 0 || navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
             location.href = twitter_url + EUC(twmessage);
         }else{
